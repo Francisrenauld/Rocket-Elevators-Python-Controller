@@ -1,11 +1,4 @@
-# elevatorID = 1
-# floorRequestButtonID = 1
-
-
-# "idle", _amountOfFloors
-# _status, _amountOfFloors,
-# callButtonID = 1
-# _status
+import time
 
 
 class Column:
@@ -17,23 +10,19 @@ class Column:
         self.status = _status
         self.elevatorList = []
         self.callButtonList = []
-
         self.createElevators(_amountOfFloors, _amountOfElevators)
         self.createCallButtons(_amountOfFloors)
 
     def createCallButtons(self, _amountOfFloors):
         buttonFloor = 1
-
         for i in range(_amountOfFloors):
             callButtonID = i + 1
             if buttonFloor < _amountOfFloors:  # If it's not the last floor
                 callButton = CallButton(callButtonID, buttonFloor, "up")
                 self.callButtonList.append(callButton)
-                # callButtonID += 1
             if buttonFloor > 1:
                 callButton = CallButton(callButtonID, buttonFloor, "down")  # id, status, floor, direction
                 self.callButtonList.append(callButton)
-                # callButtonID += 1
             buttonFloor += 1
 
     def createElevators(self, _amountOfFloors, _amountOfElevators):
@@ -47,14 +36,13 @@ class Column:
         elevator = self.findElevator(floor, direction)
         elevator.floorRequestList.append(floor)
         elevator.move()
-        # elevator.operateDoors
+        elevator.operateDoors()
         return elevator
 
     def findElevator(self, requestedFloor, requestedDirection):
         bestElevator = self.elevatorList[0]
         bestScore = 5
         referenceGap = 10000000
-        # bestElevatorInformation = BestElevatorInfo(bestElevator, bestScore, referenceGap)
 
         for elevator in self.elevatorList:
             if requestedFloor == elevator.currentFloor and elevator.status == "stopped" and requestedDirection == \
@@ -82,7 +70,7 @@ class Column:
             bestElevator = bestElevatorInformation.bestElevator
             bestScore = bestElevatorInformation.bestScore
             referenceGap = bestElevatorInformation.referenceGap
-            print(bestElevator)
+
         return bestElevator
 
     def checkIfElevatorIsBetter(self, scoreToCheck, newElevator, bestScore, referenceGap, bestElevator, floor):
@@ -110,7 +98,6 @@ class Elevator:
         self.door = door
         self.floorRequestList = []
         self.floorRequestButtonList = []
-
         self.createFloorRequestButtons(_currentFloor)
 
     def createFloorRequestButtons(self, _amountOfFloors):
@@ -126,7 +113,7 @@ class Elevator:
     def requestFloor(self, floor):
         self.floorRequestList.append(floor)
         self.move()
-        # self.operateDoors
+        self.operateDoors()
 
     def move(self):
         while len(self.floorRequestList) > 0:
@@ -137,14 +124,12 @@ class Elevator:
                 self.sortFloorList()
                 while self.currentFloor > destination:
                     self.currentFloor = self.currentFloor - 1
-                    print(self.currentFloor)
                     self.screenDisplay = self.currentFloor
             elif self.currentFloor < destination:
                 self.direction = "up"
                 self.sortFloorList()
                 while self.currentFloor < destination:
                     self.currentFloor += 1
-                    print(self.currentFloor)
                     self.screenDisplay = self.currentFloor
             self.status = "stopped"
             self.floorRequestList.pop(0)
@@ -155,6 +140,20 @@ class Elevator:
             self.floorRequestList.sort()
         else:
             self.floorRequestList.sort(reverse=True)
+
+    def operateDoors(self):
+        overweight = False
+        obstruction = False
+        self.door.status = "open"
+        time.sleep(5)# SA  LE FAIT 50 SECONDE SI TU VEUT ATTENDRE 5 SEC IL METTRE 0.5
+        if overweight == False:
+            self.door.status = "closing"
+            if obstruction == False:
+                self.door.status = "closed"
+
+
+
+
 
 
 class BestElevatorInfo:
@@ -183,24 +182,3 @@ class Door:
     def __init__(self, _id, _status="Active"):
         self.ID = _id
         self.status = _status
-
-
-# print("hello world")
-# celevator = Elevator(1, 10)
-
-# print(elevator.floorRequestsButtonsList)
-
-# column1.elevatorList[0].currentFloor = 10
-# column1.elevatorList[0].status = 'idle'
-# column1.elevatorList[1].currentFloor = 3
-# column1.elevatorList[1].direction = 'up'
-# column1.elevatorList[1].status = 'moving'
-# elevator = Elevator(1, 10)
-
-# test.requestElevator(1, "Up")
-# print(test)
-
-# print(test.callButtonList)
-
-
-
