@@ -145,7 +145,7 @@ class Elevator:
         overweight = False
         obstruction = False
         self.door.status = "open"
-        time.sleep(5)# SA  LE FAIT 50 SECONDE SI TU VEUT ATTENDRE 5 SEC IL METTRE 0.5
+        time.sleep(0.5)# nomralemnt c'Est 5 qui faut mettre mais a cause des test sa fait attendre 50 sec
         if overweight == False:
             self.door.status = "closing"
             if obstruction == False:
